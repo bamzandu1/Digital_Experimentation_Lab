@@ -16,9 +16,9 @@ def hello() -> str:
 
     df['Time'] = np.arange(len(df.index))   
 
-    df1=df.head()
-    
-    return df1.to_string() 
+    print(df.head())
+
+    return df.to_string()
 
 
 if __name__ == "__main__":
