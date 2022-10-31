@@ -2,16 +2,21 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-
+import io
+import random
+from flask import Flask, Response, request
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.backends.backend_svg import FigureCanvasSVG
+from matplotlib.figure import Figure
 from flask import Flask
+
 app = Flask(__name__)
 
 @app.route("/")
 
 def hello() -> str:
     df = pd.read_csv(
-    "../input/datasets/co2.csv",
+    "../input/datasets/book_sales.csv",
     index_col='Date',
     parse_dates=['Date'],
 )
@@ -40,7 +45,9 @@ def hello() -> str:
     ax = sns.regplot(x='Time', y='Hardcover', data=df, ci=None, scatter_kws=dict(color='0.25'))
     ax.set_title('Time Plot of Hardcover Sales');
   
-    return fig
+    output = io.BytesIO()
+    FigureCanvasAgg(fig).print_png(output)
+    return Response(output.getvalue(), mimetype="image/png")
 
 
 if __name__ == "__main__":
